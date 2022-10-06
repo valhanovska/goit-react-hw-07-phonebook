@@ -6,7 +6,7 @@ import s from './App.module.css';
 
 export function App() {
   return (
-    <div className={s.cotainer}>
+    <div className={s.container}>
       <div>
         <h1>Phonebook</h1>
         <Form />
