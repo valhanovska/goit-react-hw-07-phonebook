@@ -1,9 +1,12 @@
-import { useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'redux/operations';
+
 import PropTypes from 'prop-types';
 import s from './ContactItem.module.css';
+import { getLoading } from 'redux/selectors';
 
 const ContactItem = ({ name, number, id }) => {
+  const loading = useSelector(getLoading);
   const dispatch = useDispatch();
 
   const onDelete = () => {
@@ -15,7 +18,12 @@ const ContactItem = ({ name, number, id }) => {
       <p>
         <span>{name}</span>: {number}
       </p>
-      <button type="button" className={s.button} onClick={onDelete}>
+      <button
+        type="button"
+        className={s.button}
+        onClick={onDelete}
+        disabled={loading}
+      >
         Delete
       </button>
     </li>
