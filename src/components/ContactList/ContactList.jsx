@@ -4,6 +4,8 @@ import { getContacts, getFilter } from 'redux/selectors';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
 
+import s from './ContactList.module.css';
+
 const ContactList = () => {
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
@@ -23,7 +25,7 @@ const ContactList = () => {
   return (
     <>
       {lowerCaseContact.length > 0 && (
-        <ul>
+        <ul className={s.list}>
           {lowerCaseContact.map(({ id, name, phone }) => (
             <ContactItem key={id} name={name} number={phone} id={id} />
           ))}
