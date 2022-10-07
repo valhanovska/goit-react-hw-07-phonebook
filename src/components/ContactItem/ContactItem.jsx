@@ -4,10 +4,15 @@ import { deleteContact } from 'redux/operations';
 import PropTypes from 'prop-types';
 import s from './ContactItem.module.css';
 import { getLoading } from 'redux/selectors';
+import { editContactAction } from 'redux/slice';
 
 const ContactItem = ({ name, number, id }) => {
   const loading = useSelector(getLoading);
   const dispatch = useDispatch();
+
+  const onClickEdit = () => {
+    dispatch(editContactAction({ name, number, id }));
+  };
 
   const onDelete = () => {
     dispatch(deleteContact(id));
@@ -15,9 +20,10 @@ const ContactItem = ({ name, number, id }) => {
 
   return (
     <li className={s.item}>
-      <p>
-        <span>{name}</span>: {number}
-      </p>
+      <div className={s.group}>
+        <p className={s.name}>{name}:</p>
+        <p>{number}</p>
+      </div>
       <button
         type="button"
         className={s.button}
@@ -25,6 +31,14 @@ const ContactItem = ({ name, number, id }) => {
         disabled={loading}
       >
         Delete
+      </button>
+      <button
+        type="button"
+        className={s.button}
+        disabled={loading}
+        onClick={onClickEdit}
+      >
+        Edit
       </button>
     </li>
   );
