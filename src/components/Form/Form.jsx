@@ -1,18 +1,30 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
-import { addContact } from 'redux/operations';
+import { getContacts, getEditContact } from 'redux/selectors';
+import {
+  addContact,
+  editContact as editContactOperation,
+} from 'redux/operations';
 
 // import { addContact } from 'redux/slice';
 
 import s from './Form.module.css';
+import { useEffect } from 'react';
 
 function Form() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
   const contacts = useSelector(getContacts);
+  const editContact = useSelector(getEditContact);
+  useEffect(() => {
+    if (editContact) {
+      const { name, number } = editContact;
+      setName(name);
+      setPhone(number);
+    }
+  }, [editContact]);
 
   const dispatch = useDispatch();
 
@@ -41,19 +53,26 @@ function Form() {
   const handleSubmit = e => {
     e.preventDefault();
     const filterName = name;
-
-    if (contacts.find(({ name }) => name.toLowerCase() === filterName)) {
-      alert(`${contacts.name} is already in contacts`);
+    const normFilterName = filterName.toLowerCase();
+    if (
+      contacts.find(({ name }) => name.toLowerCase() === normFilterName) ||
+      (editContact &&
+        contacts.find(({ name }) => name.toLowerCase() === normFilterName))
+    ) {
+      alert(`${filterName} is already in contacts`);
       return;
+    } else {
+      !editContact
+        ? dispatch(addContact({ name, phone, id: nanoid() })) && reset()
+        : dispatch(editContactOperation({ name, phone, id: editContact.id })) &&
+          reset();
     }
-    dispatch(addContact({ name, phone, id: nanoid() }));
-    reset();
   };
 
   return (
     <form className={s.form} onSubmit={handleSubmit}>
-      <label>
-        Name
+      <div className={s.inputform}>
+        <label htmlFor="name">Name</label>
         <input
           type="text"
           name="name"
@@ -62,10 +81,11 @@ function Form() {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           onChange={handleChange}
+          id="name"
         />
-      </label>
-      <label>
-        Number
+      </div>
+      <div className={s.inputform}>
+        <label htmlFor="phone">Number</label>
         <input
           type="tel"
           name="phone"
@@ -74,8 +94,10 @@ function Form() {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           onChange={handleChange}
+          id="phone"
         />
-      </label>
+      </div>
+
       <button className={s.button} type="submit">
         Add contact
       </button>
