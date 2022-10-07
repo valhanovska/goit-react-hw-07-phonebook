@@ -25,3 +25,11 @@ export const deleteContact = createAsyncThunk(
     return await axios.delete(`/contacts/${id}`).then(res => res.data);
   }
 );
+
+export const editContact = createAsyncThunk(
+  'contacts/editContact',
+  async contact => {
+    const res = await axios.put(`/contacts/${contact.id}`, contact);
+    return res.data;
+  }
+);
