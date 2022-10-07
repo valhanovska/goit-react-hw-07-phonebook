@@ -6,6 +6,18 @@
   justify-content: space-between;
 }
 
+.group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  gap: 4px;
+}
+
+/* .name {
+  width: 100%;
+} */
+
 .button {
   background-color: transparent;
   border-radius: 20%;
